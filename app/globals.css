@@ -3,25 +3,55 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --colour-white: #ffffff;
+  --colour-off-white: #faf9f7;
+  --colour-light: #f5f2ee;
+  --colour-border: #e8e3dc;
+  --colour-text-muted: #8a7f74;
+  --colour-text-body: #2d2520;
+  --colour-text-dark: #0d0a08;
+  --colour-orange: #ff6b35;
+  --colour-orange-dark: #e85d2a;
+  --colour-orange-light: #fff0e8;
+  --colour-dark: #0d0a08;
+  --colour-dark-card: #1a1612;
+  --colour-success: #22c55e;
+  --colour-warning: #f59e0b;
+  --colour-danger: #ef4444;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Remove dark mode overrides — this funnel is always light */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #2d2520;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Pulse animation for CTA button */
+  @keyframes cta-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 12px rgba(255, 107, 53, 0);
+    }
+  }
+
+  .animate-cta-pulse {
+    animation: cta-pulse 2.5s ease-in-out infinite;
+  }
+
+  /* Pulsing green dot for badge */
+  @keyframes dot-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .animate-dot-pulse {
+    animation: dot-pulse 1.5s ease-in-out infinite;
   }
 }
