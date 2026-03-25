@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { getPersonaDetails, getSubScores } from "@/lib/score-calculator";
 declare global {
   interface Window {
@@ -309,16 +310,28 @@ function SalesContent() {
 
           {/* Before/After — full width */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
-            <div className="flex-1 h-64 sm:h-80 rounded-card overflow-hidden relative bg-zinc-400">
-              {/* TODO: <Image src="/images/before-5.jpg" ... fill className="object-cover grayscale" /> */}
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-400 to-zinc-600" style={{ filter: "grayscale(1)" }} />
+            <div className="flex-1 h-64 sm:h-80 rounded-card overflow-hidden relative">
+              <Image
+                src="/images/before-1.png"
+                alt="Jake and Sarah before their transformation"
+                fill
+                className="object-cover grayscale"
+                sizes="(max-width: 640px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               <div className="absolute bottom-3 left-3">
                 <span className="text-xs font-bold text-white bg-black/60 rounded-pill px-3 py-1 uppercase tracking-widest">Before</span>
               </div>
             </div>
             <div className="flex-1 h-64 sm:h-80 rounded-card overflow-hidden relative">
-              {/* TODO: <Image src="/images/after-3.jpg" ... fill className="object-cover" /> */}
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-200 to-orange-400" />
+              <Image
+                src="/images/after-1.jpg"
+                alt="Jake and Sarah after their 12-week transformation"
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, 50vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               <div className="absolute bottom-3 left-3">
                 <span className="text-xs font-bold text-white bg-orange/80 rounded-pill px-3 py-1 uppercase tracking-widest">After</span>
               </div>
