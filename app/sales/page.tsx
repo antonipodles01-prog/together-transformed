@@ -48,11 +48,11 @@ function FeatureCard({ icon, title, body }: { icon: string; title: string; body:
 // ─── Checkout button ────────────────────────────────────────────────────────────
 
 function CheckoutButton({ label = "GET TOGETHER TRANSFORMED  →" }: { label?: string }) {
-  const stripeUrl = process.env.NEXT_PUBLIC_STRIPE_CHECKOUT_URL ?? "#";
+  const checkoutUrl = process.env.NEXT_PUBLIC_CHECKOUT_URL ?? "https://whop.com/checkout/plan_rS4hwTtmAt7ui";
 
   return (
     <a
-      href={stripeUrl}
+      href={checkoutUrl}
       onClick={() => pushEvent("checkout_click", { product: "main" })}
       className="inline-flex items-center justify-center w-full h-14 bg-orange text-white font-body font-bold text-[18px] rounded-pill hover:bg-orange-dark active:scale-[0.98] transition-all duration-200 animate-cta-pulse"
     >
