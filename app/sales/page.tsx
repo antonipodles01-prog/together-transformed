@@ -315,7 +315,8 @@ function SalesContent() {
                 src="/images/before-1.png"
                 alt="Jake and Sarah before their transformation"
                 fill
-                className="object-cover object-top grayscale"
+                className="object-cover grayscale"
+                style={{ objectPosition: 'center 20%' }}
                 sizes="(max-width: 640px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
@@ -328,7 +329,8 @@ function SalesContent() {
                 src="/images/after-1.jpg"
                 alt="Jake and Sarah after their 12-week transformation"
                 fill
-                className="object-cover object-top"
+                className="object-cover"
+                style={{ objectPosition: 'center 28%' }}
                 sizes="(max-width: 640px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
