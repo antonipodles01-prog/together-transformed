@@ -7,14 +7,13 @@ import Image from "next/image";
 import { getPersonaDetails, getSubScores } from "@/lib/score-calculator";
 declare global {
   interface Window {
-    dataLayer: Record<string, unknown>[];
+    gtag: (...args: unknown[]) => void;
   }
 }
 
-function pushEvent(event: string, data?: Record<string, unknown>) {
-  if (typeof window !== "undefined") {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event, ...data });
+function fireEvent(name: string, data?: Record<string, unknown>) {
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+    window.gtag("event", name, { event_category: "funnel", ...data });
   }
 }
 
@@ -53,7 +52,7 @@ function CheckoutButton({ label = "GET TOGETHER TRANSFORMED  →" }: { label?: s
   return (
     <a
       href={checkoutUrl}
-      onClick={() => pushEvent("checkout_click", { product: "main" })}
+      onClick={() => fireEvent("checkout_click", { product: "main" })}
       className="inline-flex items-center justify-center w-full h-14 bg-orange text-white font-body font-bold text-[18px] rounded-pill hover:bg-orange-dark active:scale-[0.98] transition-all duration-200 animate-cta-pulse"
     >
       {label}

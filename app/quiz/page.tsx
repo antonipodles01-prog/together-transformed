@@ -60,14 +60,13 @@ const initialState: QuizState = {
 
 declare global {
   interface Window {
-    dataLayer: Record<string, unknown>[];
+    gtag: (...args: unknown[]) => void;
   }
 }
 
-function pushEvent(event: string, data?: Record<string, unknown>) {
-  if (typeof window !== "undefined") {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event, ...data });
+function fireEvent(name: string, data?: Record<string, unknown>) {
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+    window.gtag("event", name, { event_category: "funnel", ...data });
   }
 }
 
@@ -116,7 +115,7 @@ export default function QuizPage() {
 
   // Fire quiz_start on mount
   useEffect(() => {
-    pushEvent("quiz_start");
+    fireEvent("quiz_start");
   }, []);
 
   // Handle selection — highlight then auto-advance after 400ms
@@ -155,7 +154,7 @@ export default function QuizPage() {
         sessionStorage.setItem("tt_score", String(score));
         sessionStorage.setItem("tt_answers", JSON.stringify(state.answers));
 
-        pushEvent("quiz_complete", { score });
+        fireEvent("quiz_complete", { score });
 
         router.push(`/results?score=${score}`);
       }

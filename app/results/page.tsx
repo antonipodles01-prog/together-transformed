@@ -9,14 +9,13 @@ import { submitEmail } from "@/lib/email";
 
 declare global {
   interface Window {
-    dataLayer: Record<string, unknown>[];
+    gtag: (...args: unknown[]) => void;
   }
 }
 
-function pushEvent(event: string, data?: Record<string, unknown>) {
-  if (typeof window !== "undefined") {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event, ...data });
+function fireEvent(name: string, data?: Record<string, unknown>) {
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+    window.gtag("event", name, { event_category: "funnel", ...data });
   }
 }
 
@@ -66,7 +65,7 @@ function EmailForm({ score }: { score: number }) {
 
     try {
       await submitEmail(email, score);
-      pushEvent("email_submit", { score, email });
+      fireEvent("email_submit", { score, email });
 
       // Brief "unlocking" delay
       await new Promise((r) => setTimeout(r, 500));

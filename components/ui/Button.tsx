@@ -46,7 +46,7 @@ export function Button({
   if (href) {
     return (
       <motion.div whileTap={{ scale: 0.98 }}>
-        <Link href={href} className={classes}>
+        <Link href={href} className={classes} onClick={onClick}>
           {children}
         </Link>
       </motion.div>
