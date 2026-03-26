@@ -19,7 +19,7 @@ export function BeforeAfter() {
             src="/images/before-1.png"
             alt="Jake and Sarah before their transformation"
             fill
-            className="object-cover grayscale"
+            className="object-cover object-top grayscale"
             sizes="(max-width: 640px) 100vw, 50vw"
             priority
           />
@@ -42,7 +42,7 @@ export function BeforeAfter() {
             src="/images/after-1.jpg"
             alt="Jake and Sarah after their 12-week transformation"
             fill
-            className="object-cover"
+            className="object-cover object-top"
             sizes="(max-width: 640px) 100vw, 50vw"
             priority
           />

@@ -267,7 +267,7 @@ function SalesContent() {
 
         {/* ─── 4. Timeline — "Most couples notice and do nothing" ──────── */}
         <section className="bg-offwhite rounded-card p-6 sm:p-8">
-          <h2 className="font-display font-bold text-[24px] sm:text-[28px] text-dark mb-6">
+          <h2 className="font-display font-bold text-[24px] sm:text-[28px] text-dark mb-6 text-center">
             Most couples notice this and do nothing.
           </h2>
           <div className="space-y-6 relative">
@@ -297,14 +297,14 @@ function SalesContent() {
               </div>
             ))}
           </div>
-          <p className="font-body text-muted mt-6 text-[15px] italic">
+          <p className="font-body text-muted mt-6 text-[15px] italic text-center">
             Until something forces a change. For Jake and Sarah, it was a Tuesday evening.
           </p>
         </section>
 
         {/* ─── 5. Jake & Sarah story ───────────────────────────────────── */}
         <section>
-          <h2 className="font-display font-bold text-[28px] sm:text-[34px] text-dark mb-6">
+          <h2 className="font-display font-bold text-[28px] sm:text-[34px] text-dark mb-6 text-center">
             We were you. For years.
           </h2>
 
@@ -315,7 +315,7 @@ function SalesContent() {
                 src="/images/before-1.png"
                 alt="Jake and Sarah before their transformation"
                 fill
-                className="object-cover grayscale"
+                className="object-cover object-top grayscale"
                 sizes="(max-width: 640px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
@@ -328,7 +328,7 @@ function SalesContent() {
                 src="/images/after-1.jpg"
                 alt="Jake and Sarah after their 12-week transformation"
                 fill
-                className="object-cover"
+                className="object-cover object-top"
                 sizes="(max-width: 640px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
