@@ -5,37 +5,46 @@ import { motion } from "framer-motion";
 const painPoints = [
   {
     icon: "📸",
-    headline: "You avoid cameras together",
-    body: "Not because you're busy — because you don't want evidence.",
+    headline: "You stop taking photos together",
+    body: "Not because you're busy. Because you don't want the evidence.",
   },
   {
-    icon: "👗",
-    headline: "Nothing in the wardrobe feels right",
-    body: "You wear the same 3 outfits because everything else is a reminder.",
+    icon: "💬",
+    headline: "You stop talking about getting in shape",
+    body: "The conversation happens every Sunday. Nothing ever changes.",
   },
   {
-    icon: "🛋",
-    headline: 'You keep saying "we should really start the gym"',
-    body: "Sunday night. Same conversation. Nothing changes.",
+    icon: "🤝",
+    headline: "You stop feeling like a team",
+    body: "It's not a fight. It's a quiet drift that builds for years.",
   },
 ];
 
 export function PainPoints() {
   return (
     <section className="w-full max-w-landing mx-auto px-4 py-16">
-      {/* Section headline */}
       <motion.h2
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="font-display font-bold text-[28px] sm:text-[34px] text-dark text-center mb-12 max-w-[600px] mx-auto leading-tight"
+        className="font-display font-bold text-[28px] sm:text-[34px] text-dark text-center mb-4 max-w-[560px] mx-auto leading-tight"
       >
-        Most Couples Feel This. Almost None of Them Do Anything About It.
+        Most couples don&apos;t fall off because they don&apos;t care.
       </motion.h2>
 
-      {/* Pain point rows */}
-      <div className="flex flex-col gap-8 max-w-[640px] mx-auto">
+      <motion.p
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="font-body text-[17px] text-muted text-center max-w-[520px] mx-auto mb-10 leading-relaxed"
+      >
+        They fall off because life, stress, routine, and quiet frustration slowly
+        take over.
+      </motion.p>
+
+      <div className="flex flex-col gap-8 max-w-[580px] mx-auto mb-10">
         {painPoints.map((point, i) => (
           <motion.div
             key={point.headline}
@@ -55,6 +64,16 @@ export function PainPoints() {
           </motion.div>
         ))}
       </div>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="font-body text-[17px] text-muted text-center max-w-[400px] mx-auto italic"
+      >
+        That&apos;s what this helps uncover.
+      </motion.p>
     </section>
   );
 }

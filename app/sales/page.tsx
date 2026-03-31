@@ -4,7 +4,8 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { getPersonaDetails, getSubScores } from "@/lib/score-calculator";
+import { getPersonaDetails } from "@/lib/score-calculator";
+
 declare global {
   interface Window {
     gtag: (...args: unknown[]) => void;
@@ -15,19 +16,6 @@ function fireEvent(name: string, data?: Record<string, unknown>) {
   if (typeof window !== "undefined" && typeof window.gtag === "function") {
     window.gtag("event", name, { event_category: "funnel", ...data });
   }
-}
-
-// ─── Sub-score box ──────────────────────────────────────────────────────────────
-
-function ScoreBox({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="bg-white border border-border rounded-card p-4 text-center shadow-card">
-      <div className="font-display font-bold text-[28px] text-dark">
-        {value}%
-      </div>
-      <div className="text-xs font-body text-muted mt-1 leading-tight">{label}</div>
-    </div>
-  );
 }
 
 // ─── Dark feature card ──────────────────────────────────────────────────────────
@@ -73,8 +61,7 @@ function ProductCard() {
   ];
 
   return (
-    <div className="bg-white border border-border rounded-card shadow-card-strong p-6 sm:p-8">
-      {/* TODO: Add cover image — <Image src="/images/cover.jpg" ... /> */}
+    <div className="bg-white border border-border rounded-card shadow-card p-6 sm:p-8">
       <div className="w-full h-48 bg-gradient-to-br from-orange-light to-orange/30 rounded-card mb-6 flex items-center justify-center">
         <div className="text-center">
           <div className="text-4xl mb-2">💪</div>
@@ -83,7 +70,6 @@ function ProductCard() {
         </div>
       </div>
 
-      {/* Checklist */}
       <ul className="space-y-3 mb-6">
         {checklist.map((item) => (
           <li key={item} className="flex items-start gap-3 font-body text-body text-[15px]">
@@ -93,40 +79,12 @@ function ProductCard() {
         ))}
       </ul>
 
-      {/* Pricing */}
       <div className="text-center mb-5">
         <span className="font-body text-muted text-lg line-through mr-3">$97</span>
         <span className="font-display font-bold text-[40px] text-dark">$27</span>
       </div>
 
       <CheckoutButton />
-    </div>
-  );
-}
-
-// ─── Upsell banner ──────────────────────────────────────────────────────────────
-
-function UpsellBanner() {
-  return (
-    <div className="bg-orange rounded-card p-5 sm:p-6 text-center mt-4">
-      <p className="font-body font-bold text-white text-[15px] uppercase tracking-wide mb-1">
-        Add the Complete 12 Week Meal Plan
-      </p>
-      <p className="font-body text-white/80 text-sm mb-4">
-        Every meal. Every day. Built around your calorie numbers.
-      </p>
-      <div className="flex items-center justify-center gap-3 mb-4">
-        <span className="font-body text-white/70 text-base line-through">$47</span>
-        <span className="font-display font-bold text-white text-2xl">+$17</span>
-      </div>
-      {/* TODO: Link to actual upsell checkout URL when ready */}
-      <button
-        disabled
-        className="w-full h-12 bg-white/20 border border-white/40 rounded-pill font-body font-bold text-white text-[15px] cursor-not-allowed"
-        title="Coming soon"
-      >
-        ADD THE MEAL PLAN — Coming Soon
-      </button>
     </div>
   );
 }
@@ -144,64 +102,27 @@ function SalesContent() {
       : 50;
 
   const safeScore = isNaN(score) ? 50 : Math.max(0, Math.min(100, score));
-
-  // Get answers from sessionStorage for sub-scores
-  const rawAnswers = typeof window !== "undefined" ? sessionStorage.getItem("tt_answers") : null;
-  const answers: number[] = rawAnswers ? JSON.parse(rawAnswers) : [];
-  const subScores = getSubScores(answers);
   const persona = getPersonaDetails(safeScore);
 
   const reasonCards = [
     { icon: "🔄", title: "Trying to do it alone", body: "No partner accountability means no one to keep you going when motivation dips." },
     { icon: "😴", title: "Exhaustion making shortcuts feel justified", body: "When you're tired, every shortcut makes sense. Until it doesn't." },
-    { icon: "🍕", title: "Food environment designed to make you eat more", body: "It's not willpower. The system is built against you. Until you have your own." },
+    { icon: "🍕", title: "Food environment working against you", body: "It's not willpower. The system is built against you. Until you have your own." },
     { icon: "📅", title: "Waiting for the right time", body: "There is no right time. There's only now, and later. Later has a cost." },
   ];
 
   const systemFeatures = [
-    {
-      icon: "💪",
-      title: "Push Pull Legs Training Plan",
-      body: "3 sessions/week, 45 mins each. Done together. Built around real life, not gym fantasies.",
-    },
-    {
-      icon: "🍽",
-      title: "The 80/20 Nutrition Framework",
-      body: "No banned foods. Just your numbers. Sustainable because you're not starving.",
-    },
-    {
-      icon: "🧠",
-      title: "The Mindset Method",
-      body: "The 3 moments that break most couples — identified and handled before they derail you.",
-    },
-    {
-      icon: "📅",
-      title: "The Sunday Ritual",
-      body: "10 minutes a week that keeps you both on track. Simple enough to actually do.",
-    },
+    { icon: "💪", title: "Push Pull Legs Training Plan", body: "3 sessions/week, 45 mins each. Done together. Built around real life." },
+    { icon: "🍽", title: "The 80/20 Nutrition Framework", body: "No banned foods. Just your numbers. Sustainable because you're not starving." },
+    { icon: "🧠", title: "The Mindset Method", body: "The 3 moments that break most couples — identified and handled before they derail you." },
+    { icon: "📅", title: "The Sunday Ritual", body: "10 minutes a week that keeps you both on track. Simple enough to actually do." },
   ];
 
   const stakeItems = [
-    {
-      icon: "🤫",
-      label: "Your confidence",
-      body: "Getting a little quieter every year. The photos you avoid. The plans you cancel.",
-    },
-    {
-      icon: "❤️",
-      label: "Your relationship",
-      body: "The intimacy that goes unsaid. The closeness that quietly drifts.",
-    },
-    {
-      icon: "🫀",
-      label: "Your health",
-      body: "The back pain, the breathlessness, the energy you've forgotten you could have.",
-    },
-    {
-      icon: "🌅",
-      label: "Your future",
-      body: "The version of yourselves you keep promising you'll become.",
-    },
+    { icon: "🤫", label: "Your confidence", body: "Getting a little quieter every year." },
+    { icon: "❤️", label: "Your relationship", body: "The intimacy that goes unsaid." },
+    { icon: "🫀", label: "Your health", body: "The energy you've forgotten you could have." },
+    { icon: "🌅", label: "Your future", body: "The version of yourselves you keep promising to become." },
   ];
 
   return (
@@ -217,42 +138,38 @@ function SalesContent() {
           <p className="text-sm font-body text-muted uppercase tracking-widest mb-2">
             Your result
           </p>
-          <h1 className="font-display font-bold text-[32px] sm:text-[40px] text-dark mb-2">
+          <h1 className="font-display font-bold text-[32px] sm:text-[40px] text-dark mb-4">
             {persona.title}
           </h1>
-          <div className="inline-block bg-orange-light border border-orange/30 rounded-pill px-4 py-1.5 mb-5">
-            <span className="text-sm font-body font-semibold text-orange">
-              {safeScore}% Transformation Readiness
-            </span>
-          </div>
-          <p className="font-body text-muted text-[17px] max-w-[520px] mx-auto mb-8 leading-relaxed">
-            {persona.tagline}
+          <p className="font-body text-muted text-[17px] max-w-[520px] mx-auto leading-relaxed">
+            Based on your answers, here&apos;s what&apos;s actually happening —
+            and exactly what it would take to change it.
           </p>
-
-          {/* Sub-score boxes */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <ScoreBox label="Transformation Readiness" value={subScores.transformationReadiness} />
-            <ScoreBox label="Relationship Momentum" value={subScores.relationshipMomentum} />
-            <ScoreBox label="Body Potential" value={subScores.bodyPotential} />
-            <ScoreBox label="Urgency Score" value={subScores.urgencyScore} />
-          </div>
         </motion.section>
 
-        {/* ─── 2. Persona description ──────────────────────────────────── */}
-        <section className="text-center max-w-[560px] mx-auto">
-          <p className="font-body text-body text-[17px] leading-relaxed">
-            {persona.description}
+        {/* ─── 2. System headline ──────────────────────────────────────── */}
+        <section className="text-center max-w-[600px] mx-auto">
+          <h2 className="font-display font-bold text-[26px] sm:text-[32px] text-dark mb-4">
+            The 12-Week Couple System for Getting Back in Shape Together
+          </h2>
+          <p className="font-body text-muted text-[17px] leading-relaxed">
+            For couples who want a simple plan to lose weight, build momentum,
+            and actually stay consistent.
           </p>
         </section>
 
-        {/* ─── 3. Problem stack ─────────────────────────────────────────── */}
+        {/* ─── 3. Problem statement ─────────────────────────────────────── */}
         <section>
           <p className="text-center font-body text-muted text-sm uppercase tracking-widest mb-3">
             It&apos;s not your fault
           </p>
-          <h2 className="font-display font-bold text-[26px] sm:text-[32px] text-dark text-center mb-8 max-w-[500px] mx-auto">
-            And it&apos;s more common than you think.
+          <h2 className="font-display font-bold text-[24px] sm:text-[30px] text-dark text-center mb-6 max-w-[500px] mx-auto">
+            Most couples don&apos;t need more motivation.
           </h2>
+          <p className="font-body text-body text-[17px] text-center leading-relaxed max-w-[520px] mx-auto mb-8">
+            They need a system that works when life gets busy, energy is low,
+            and both people are starting from the same place emotionally.
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             {reasonCards.map((card) => (
               <FeatureCard key={card.title} icon={card.icon} title={card.title} body={card.body} />
@@ -264,33 +181,22 @@ function SalesContent() {
           </p>
         </section>
 
-        {/* ─── 4. Timeline — "Most couples notice and do nothing" ──────── */}
+        {/* ─── 4. Timeline ──────────────────────────────────────────────── */}
         <section className="bg-offwhite rounded-card p-6 sm:p-8">
-          <h2 className="font-display font-bold text-[24px] sm:text-[28px] text-dark mb-6 text-center">
+          <h2 className="font-display font-bold text-[22px] sm:text-[26px] text-dark mb-6 text-center">
             Most couples notice this and do nothing.
           </h2>
           <div className="space-y-6 relative">
             <div className="absolute left-3 top-2 bottom-2 w-0.5 bg-border" />
             {[
-              {
-                time: "Next month",
-                text: "Same conversations. Same excuses. Same feelings on Sunday night.",
-              },
-              {
-                time: "Next year",
-                text: "Clothes don't fit. Avoiding more plans. A little further apart.",
-              },
-              {
-                time: "In 5 years",
-                text: '"Where did the time go?" — that thought that genuinely scares you.',
-              },
+              { time: "Next month", text: "Same conversations. Same excuses. Same feelings on Sunday night." },
+              { time: "Next year", text: "Clothes don't fit. Avoiding more plans. A little further apart." },
+              { time: "In 5 years", text: '"Where did the time go?" — that thought that genuinely scares you.' },
             ].map((item) => (
               <div key={item.time} className="flex gap-5 pl-8 relative">
                 <div className="absolute left-1.5 top-1.5 w-3 h-3 rounded-full bg-orange border-2 border-white -translate-x-1/2" />
                 <div>
-                  <p className="font-body font-semibold text-orange text-sm mb-1">
-                    {item.time}
-                  </p>
+                  <p className="font-body font-semibold text-orange text-sm mb-1">{item.time}</p>
                   <p className="font-body text-body text-[15px]">{item.text}</p>
                 </div>
               </div>
@@ -307,7 +213,6 @@ function SalesContent() {
             We were you. For years.
           </h2>
 
-          {/* Before/After — full width */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
             <div className="flex-1 h-64 sm:h-80 rounded-card overflow-hidden relative">
               <Image
@@ -315,7 +220,7 @@ function SalesContent() {
                 alt="Jake and Sarah before their transformation"
                 fill
                 className="object-cover grayscale"
-                style={{ objectPosition: 'center 20%' }}
+                style={{ objectPosition: "center 20%" }}
                 sizes="(max-width: 640px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
@@ -329,7 +234,7 @@ function SalesContent() {
                 alt="Jake and Sarah after their 12-week transformation"
                 fill
                 className="object-cover"
-                style={{ objectPosition: 'center 28%' }}
+                style={{ objectPosition: "center 28%" }}
                 sizes="(max-width: 640px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
@@ -357,7 +262,7 @@ function SalesContent() {
               Combined, over 100lbs. But honestly? The weight was almost secondary to how we felt as a couple.
             </p>
             <p className="font-semibold text-dark">
-              We&apos;re not personal trainers. We&apos;re not fitness people. We were just a normal couple who finally found
+              We&apos;re not personal trainers. We were just a normal couple who finally found
               a system simple enough to actually do together. And we did it.
             </p>
           </div>
@@ -374,7 +279,7 @@ function SalesContent() {
 
         {/* ─── 6. What's at stake ──────────────────────────────────────── */}
         <section>
-          <h2 className="font-display font-bold text-[26px] sm:text-[30px] text-dark mb-2 text-center">
+          <h2 className="font-display font-bold text-[24px] sm:text-[28px] text-dark mb-2 text-center">
             Here&apos;s what&apos;s actually at stake.
           </h2>
           <p className="text-center font-body text-muted mb-8">
@@ -382,10 +287,7 @@ function SalesContent() {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             {stakeItems.map((item) => (
-              <div
-                key={item.label}
-                className="border border-border rounded-card p-5 flex gap-4"
-              >
+              <div key={item.label} className="border border-border rounded-card p-5 flex gap-4">
                 <span className="text-2xl flex-shrink-0">{item.icon}</span>
                 <div>
                   <p className="font-body font-semibold text-dark text-[15px] mb-1">{item.label}</p>
@@ -402,7 +304,7 @@ function SalesContent() {
 
         {/* ─── 7. System reveal ────────────────────────────────────────── */}
         <section>
-          <h2 className="font-display font-bold text-[26px] sm:text-[32px] text-dark text-center mb-8">
+          <h2 className="font-display font-bold text-[24px] sm:text-[30px] text-dark text-center mb-8">
             The System That Rebuilds Couples.
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -412,51 +314,16 @@ function SalesContent() {
           </div>
         </section>
 
-        {/* ─── 8. Product card (first) ─────────────────────────────────── */}
+        {/* ─── 8. Product card ─────────────────────────────────────────── */}
         <ProductCard />
-
-        {/* Upsell banner */}
-        <UpsellBanner />
 
         {/* ─── 9. Urgency closer ───────────────────────────────────────── */}
         <section className="text-center py-4">
-          <h2 className="font-display font-bold text-[26px] sm:text-[32px] text-dark mb-4">
-            Every Day You Wait, She Notices.
+          <h2 className="font-display font-bold text-[24px] sm:text-[30px] text-dark mb-6">
+            If you&apos;ve been saying &ldquo;we need to do something about this&rdquo; for months —
+            this is your signal to actually start.
           </h2>
-          <div className="space-y-3 font-body text-body text-[16px] leading-relaxed max-w-[500px] mx-auto mb-6">
-            <p>The confidence getting a little quieter.</p>
-            <p>The photos you both avoid.</p>
-            <p>The plans you cancel because getting dressed feels like a fight.</p>
-          </div>
-          <p className="font-body text-muted text-[16px] mb-2">
-            Most couples realise this 5 years too late.
-          </p>
-          <p className="font-display font-bold text-dark text-[20px]">
-            You&apos;re not most couples.
-          </p>
-        </section>
-
-        {/* ─── 10. Product card (repeat) ───────────────────────────────── */}
-        <ProductCard />
-
-        {/* ─── 11. Final CTA ───────────────────────────────────────────── */}
-        <section className="text-center py-4">
-          <h2 className="font-display font-bold text-[26px] sm:text-[30px] text-dark mb-3">
-            Two Years From Now You&apos;ll Be Two Years Older.
-          </h2>
-          <p className="font-body text-muted mb-8">
-            The only question is — will you be choosing this?
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <CheckoutButton />
-            <button
-              disabled
-              className="h-14 px-8 rounded-pill border-2 border-orange text-orange font-body font-bold text-[16px] hover:bg-orange-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-              title="Coming soon"
-            >
-              ADD MEAL PLAN +$17 — Coming Soon
-            </button>
-          </div>
+          <ProductCard />
         </section>
 
         {/* Footer */}

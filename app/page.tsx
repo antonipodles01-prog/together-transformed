@@ -1,11 +1,8 @@
 "use client";
 
-import { SocialProofTicker } from "@/components/landing/SocialProofTicker";
 import { Hero } from "@/components/landing/Hero";
 import { BeforeAfter } from "@/components/landing/BeforeAfter";
-import { StatCards } from "@/components/landing/StatCards";
 import { PainPoints } from "@/components/landing/PainPoints";
-import { QuoteCard } from "@/components/landing/QuoteCard";
 import { Button } from "@/components/ui/Button";
 
 declare global {
@@ -23,35 +20,26 @@ function fireQuizStart() {
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-white">
-      {/* Social proof ticker */}
-      <SocialProofTicker />
-
-      {/* Hero section */}
+      {/* Hero */}
       <Hero />
 
       {/* Before / After images */}
       <BeforeAfter />
 
-      {/* First CTA */}
+      {/* CTA */}
       <section className="max-w-landing mx-auto px-4 pb-6 flex justify-center">
         <Button href="/quiz" pulse fullWidth onClick={fireQuizStart}>
-          TAKE THE FREE QUIZ &nbsp;→
+          START THE FREE 2-MINUTE QUIZ &nbsp;→
         </Button>
       </section>
-
-      {/* Stat cards */}
-      <StatCards />
 
       {/* Pain points */}
       <PainPoints />
 
-      {/* Quote / Jake & Sarah story teaser */}
-      <QuoteCard />
-
-      {/* Second CTA */}
+      {/* Final CTA */}
       <section className="max-w-landing mx-auto px-4 py-10 flex justify-center">
         <Button href="/quiz" pulse fullWidth onClick={fireQuizStart}>
-          TAKE THE FREE QUIZ &nbsp;→
+          START THE FREE 2-MINUTE QUIZ &nbsp;→
         </Button>
       </section>
 

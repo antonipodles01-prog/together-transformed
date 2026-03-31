@@ -82,10 +82,10 @@ function AnalysingScreen({ progress }: { progress: number }) {
       >
         <div className="text-4xl mb-6">📊</div>
         <h2 className="font-display text-[26px] text-dark mb-2">
-          Analysing your results...
+          Working out your result...
         </h2>
         <p className="font-body text-muted mb-8">
-          Calculating your Transformation Readiness Score
+          Putting together your couple breakdown
         </p>
 
         {/* Progress bar */}
@@ -188,11 +188,6 @@ export default function QuizPage() {
               <div className="text-4xl text-center mb-4">
                 {currentQuestion.icon}
               </div>
-
-              {/* Section label */}
-              <p className="text-xs font-body font-semibold text-muted uppercase tracking-widest text-center mb-3">
-                {currentQuestion.section}
-              </p>
 
               {/* Question text */}
               <h2 className="font-display font-bold text-[22px] sm:text-[28px] text-dark text-center mb-8 leading-tight">

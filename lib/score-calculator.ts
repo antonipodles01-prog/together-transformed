@@ -1,10 +1,10 @@
 import { quizQuestions } from "./quiz-questions";
 
-// Maximum possible score: 16 questions × 4 points = 64
-const MAX_SCORE = 64;
+// Q1 neutral (weight 2), Q2–Q9 max weight 4 each = 2 + (8 × 4) = 34
+const MAX_SCORE = 34;
 
 /**
- * Calculate the overall transformation readiness score as a percentage.
+ * Calculate score as a percentage (0–100).
  * Higher % = more stuck = higher urgency.
  */
 export function calculateScore(answers: number[]): number {
@@ -21,15 +21,11 @@ export function calculateScore(answers: number[]): number {
   return Math.round((total / MAX_SCORE) * 100);
 }
 
-export type Persona = "Stuck" | "Struggling" | "Almost" | "Ready";
+export type Persona = "Stuck" | "Frustrated" | "Ready";
 
-/**
- * Map score percentage to persona label.
- */
 export function getPersona(score: number): Persona {
-  if (score <= 25) return "Stuck";
-  if (score <= 50) return "Struggling";
-  if (score <= 75) return "Almost";
+  if (score >= 70) return "Stuck";
+  if (score >= 40) return "Frustrated";
   return "Ready";
 }
 
@@ -38,6 +34,7 @@ export interface PersonaDetails {
   title: string;
   tagline: string;
   description: string;
+  insights: string[];
 }
 
 export function getPersonaDetails(score: number): PersonaDetails {
@@ -49,67 +46,38 @@ export function getPersonaDetails(score: number): PersonaDetails {
       title: "The Stuck Couple",
       tagline: "You know something needs to change. You just haven't found the right way yet.",
       description:
-        "Your score suggests you're carrying a heavier weight than just the physical kind. The avoidance, the unspoken tension, the same conversations on Sunday nights — it's a pattern. And patterns can be broken.",
+        "You're carrying more than just the physical weight. The avoidance, the unspoken frustration, the same Sunday night conversation — it's a pattern. And patterns can be broken with the right system.",
+      insights: [
+        "The drift has been building longer than either of you admits",
+        "Focus on consistency first — motivation follows action, not the other way around",
+        "A shared system removes the friction that keeps stopping you both",
+      ],
     },
-    Struggling: {
-      label: "Struggling",
-      title: "The Struggling Couple",
-      tagline: "You're close to the edge of change. The gap between where you are and where you want to be is real — but it's not as wide as it feels.",
+    Frustrated: {
+      label: "Frustrated",
+      title: "The Frustrated Couple",
+      tagline: "You've tried before. It didn't stick. That's not a character flaw — it's a systems problem.",
       description:
-        "You've tried before. Maybe it didn't stick. But you're still here, still looking for the answer. That persistence matters. The right system — built for couples — changes everything.",
-    },
-    Almost: {
-      label: "Almost",
-      title: "The Almost Couple",
-      tagline: "You're closer than you think. The desire is there. What's been missing is the system.",
-      description:
-        "You're motivated. You care about how you both look and feel. You just haven't had a plan that works for two people with one shared life. That's what this solves.",
+        "You're aware of the gap between where you are and where you want to be. You've made attempts. What's been missing isn't willpower — it's a plan built for two people with one shared life.",
+      insights: [
+        "Past attempts failed because they weren't built for couples",
+        "Focus on alignment — both people need to be pulling in the same direction",
+        "The right framework makes consistency the default, not the exception",
+      ],
     },
     Ready: {
       label: "Ready",
       title: "The Ready Couple",
-      tagline: "You know you want this. You're looking for the green light. This is it.",
+      tagline: "The motivation is there. You just need a system that matches it.",
       description:
-        "Your mindset is already there. You're not stuck in denial — you're ready to act. The question isn't whether you should start. It's whether you'll start today.",
+        "You're not stuck in denial. You're not burned out from failed attempts. You're at the point where the right plan, started now, could genuinely change things in 12 weeks.",
+      insights: [
+        "Your mindset is already ahead of most couples who come here",
+        "Focus on building the habit structure before chasing big results",
+        "12 weeks of the right system will take you further than you expect",
+      ],
     },
   };
 
   return details[persona];
-}
-
-export interface SubScores {
-  transformationReadiness: number;
-  relationshipMomentum: number;
-  bodyPotential: number;
-  urgencyScore: number;
-}
-
-/**
- * Calculate 4 sub-scores from specific question groups.
- * All returned as percentages (0–100).
- *
- * Transformation Readiness: Q3–Q6 (indices 2–5)
- * Relationship Momentum:    Q7–Q10 (indices 6–9)
- * Body Potential:           Q11–Q13 (indices 10–12)
- * Urgency Score:            Q14–Q16 (indices 13–15)
- */
-export function getSubScores(answers: number[]): SubScores {
-  function groupScore(indices: number[], maxPerQ = 4): number {
-    const questions = indices.map((i) => quizQuestions[i]);
-    const weights = indices.map((i) => {
-      const q = quizQuestions[i];
-      if (!q || answers[i] === undefined) return 0;
-      return q.options[answers[i]]?.weight ?? 0;
-    });
-    const total = weights.reduce((a, b) => a + b, 0);
-    const maxTotal = questions.length * maxPerQ;
-    return maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
-  }
-
-  return {
-    transformationReadiness: groupScore([2, 3, 4, 5]),
-    relationshipMomentum: groupScore([6, 7, 8, 9]),
-    bodyPotential: groupScore([10, 11, 12]),
-    urgencyScore: groupScore([13, 14, 15]),
-  };
 }

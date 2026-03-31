@@ -3,9 +3,9 @@
 import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ScoreSlider } from "@/components/ui/ScoreSlider";
 import { Button } from "@/components/ui/Button";
 import { submitEmail } from "@/lib/email";
+import { getPersonaDetails } from "@/lib/score-calculator";
 
 declare global {
   interface Window {
@@ -17,32 +17,6 @@ function fireEvent(name: string, data?: Record<string, unknown>) {
   if (typeof window !== "undefined" && typeof window.gtag === "function") {
     window.gtag("event", name, { event_category: "funnel", ...data });
   }
-}
-
-// ─── Locked metric row ─────────────────────────────────────────────────────────
-
-function LockedMetricRow({ icon, label }: { icon: string; label: string }) {
-  return (
-    <div className="flex items-center gap-4 py-3.5 border-b border-border last:border-0">
-      <span className="text-xl flex-shrink-0">{icon}</span>
-      <span className="font-body font-medium text-body flex-1 text-sm sm:text-base">
-        {label}
-      </span>
-      <div className="flex items-center gap-2">
-        {/* Greyed-out placeholder bar */}
-        <div className="w-20 h-2 bg-light rounded-full overflow-hidden hidden sm:block">
-          <div className="h-full w-[60%] bg-border rounded-full" />
-        </div>
-        {/* Lock badge */}
-        <div className="flex items-center gap-1 bg-light border border-border rounded-pill px-2.5 py-1">
-          <span className="text-xs">🔒</span>
-          <span className="text-xs font-body font-medium text-muted whitespace-nowrap">
-            Unlock
-          </span>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 // ─── Email form ────────────────────────────────────────────────────────────────
@@ -66,8 +40,6 @@ function EmailForm({ score }: { score: number }) {
     try {
       await submitEmail(email, score);
       fireEvent("email_submit", { score, email });
-
-      // Brief "unlocking" delay
       await new Promise((r) => setTimeout(r, 500));
       router.push(`/sales?score=${score}`);
     } catch {
@@ -93,7 +65,7 @@ function EmailForm({ score }: { score: number }) {
       </div>
 
       <Button type="submit" fullWidth disabled={loading} className="mb-3">
-        {loading ? "Unlocking results..." : "SEE MY FULL RESULTS  →"}
+        {loading ? "Unlocking results..." : "SEE MY FULL RESULT  →"}
       </Button>
 
       <p className="text-center text-xs text-muted font-body">
@@ -116,6 +88,7 @@ function ResultsContent() {
       : 50;
 
   const safeScore = isNaN(score) ? 50 : Math.max(0, Math.min(100, score));
+  const persona = getPersonaDetails(safeScore);
 
   return (
     <div className="min-h-screen bg-white">
@@ -135,63 +108,57 @@ function ResultsContent() {
           </div>
         </motion.div>
 
-        {/* Score card */}
+        {/* Persona card */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white border border-border rounded-card shadow-card p-6 sm:p-8 mb-3"
+          className="bg-white border border-border rounded-card shadow-card p-6 sm:p-8 mb-6"
         >
-          <p className="text-xs font-body font-bold text-muted uppercase tracking-widest text-center mb-1">
-            Your Couple Change Score
+          <p className="text-xs font-body font-bold text-muted uppercase tracking-widest text-center mb-3">
+            Your result
           </p>
-          <p className="text-center text-sm font-body text-muted mb-6">
-            How much a transformation would impact your lives together
+          <h1 className="font-display font-bold text-[32px] sm:text-[36px] text-dark text-center mb-4 leading-tight">
+            {persona.title}
+          </h1>
+          <p className="font-body text-[16px] text-muted text-center leading-relaxed max-w-[420px] mx-auto">
+            {persona.description}
           </p>
-          <ScoreSlider score={safeScore} />
         </motion.div>
 
-        {/* Score explanation */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="text-center text-xs font-body text-muted mb-6 px-2"
-        >
-          A higher score means the gap between where you are and where you want
-          to be is significant — and that a change would have a major impact on
-          your relationship and confidence.
-        </motion.p>
-
-        {/* Locked metric rows */}
+        {/* What this means bullets */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
+          transition={{ delay: 0.25 }}
           className="bg-white border border-border rounded-card shadow-card p-5 sm:p-6 mb-8"
         >
           <p className="text-xs font-body font-semibold text-muted uppercase tracking-widest mb-4">
-            Your full breakdown — unlock below
+            What this means for you
           </p>
-          <LockedMetricRow icon="📈" label="Couple Change Potential" />
-          <LockedMetricRow icon="❤️" label="Relationship Impact Score" />
-          <LockedMetricRow icon="🎯" label="12-Week Success Likelihood" />
+          <ul className="space-y-3">
+            {persona.insights.map((insight, i) => (
+              <li key={i} className="flex items-start gap-3 font-body text-body text-[15px]">
+                <span className="text-orange font-bold flex-shrink-0 mt-0.5">→</span>
+                <span>{insight}</span>
+              </li>
+            ))}
+          </ul>
         </motion.div>
 
         {/* Email gate */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
+          transition={{ delay: 0.35 }}
           className="text-center"
         >
           <h2 className="font-display font-bold text-[28px] sm:text-[32px] text-dark mb-3">
-            Unlock Your{" "}
-            <span className="text-orange">Full Results</span>
+            Unlock your{" "}
+            <span className="text-orange">full breakdown</span>
           </h2>
-          <p className="font-body text-muted text-[16px] mb-6 max-w-[420px] mx-auto">
-            Enter your email to see your complete breakdown and personalised
-            12-week action plan.
+          <p className="font-body text-muted text-[16px] mb-6 max-w-[400px] mx-auto">
+            Enter your email to get your personalised 12-week plan.
           </p>
 
           <EmailForm score={safeScore} />
