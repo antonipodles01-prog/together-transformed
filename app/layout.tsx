@@ -34,7 +34,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
+      <body
+        className={`${playfair.variable} ${dmSans.variable} font-body antialiased bg-white text-body`}
+      >
+        {children}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-7DE3VZS4ND"
           strategy="afterInteractive"
@@ -42,16 +45,11 @@ export default function RootLayout({
         <Script id="ga4-init" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-7DE3VZS4ND');
+            window.gtag = function(){window.dataLayer.push(arguments);}
+            window.gtag('js', new Date());
+            window.gtag('config', 'G-7DE3VZS4ND');
           `}
         </Script>
-      </head>
-      <body
-        className={`${playfair.variable} ${dmSans.variable} font-body antialiased bg-white text-body`}
-      >
-        {children}
       </body>
     </html>
   );
